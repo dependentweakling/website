@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Lab</title>
+    <link rel="stylesheet" href="it.css">
+</head>
+<body>
+    <header style="position:fixed">HIROKO MOLONEY</header>
+    <h1 style = "padding-top:170px;">PROJECTS: HOME LAB</h1>
+    <nav>
+        <a href="index.html">About</a>
+        <a href="learning.html">Learning</a>
+        <a href="projects.html">Projects</a>
+    </nav>
+    
+    <article >
+        <p>
+            This small business environment includes a pfSense firewall, Ubuntu web 
+            server, CentOS mail server, and Windows client machine(s).
+            <br/><br/> 
+            The firewall interacts with the WAN, DMZ, and LAN segments with its three network interface
+            cards. The IP addresses set for the DMZ and LAN are 192.168.3.1 and 192.168.1.1 respectively.
+            The DMZ contains the web server and mail server with IPs 192.168.3.10 and 192.168.3.20.
+            The LAN devices receive their IPs dynamically. The firewall also features BIND DNS which is 
+            configured to resolve hostnames to IPs within the network. 
+            <br/><br/>
+            The web server uses the Linux, Apache, MySQL, and PHP stack based on an Ubuntu machine. 
+            The mail server uses CentOS with postfix and dovecot. 
+        </p>
+        <p>
+            PFSENSE SETUP<br/><br/>
+            The three network interface cards are configured for each LAN segment. There is one for 
+            the WAN, DMZ, and LAN.<br/>
+            <img src="Picture1.png" alt="Picture1"><br/>
+            The IPs have been manually configured for the DMZ (OPT1) and LAN.<br/>
+            <img src="Picture2.png" alt="Picture2"><br/><br/>
+            LAMP STACK<br/><br/>
+            I update Ubuntu and install Apache.<br/>
+            <img src="Picture3.png" alt="Picture3"><br/>
+            The Apache page routes to 192.168.3.10.<br/>
+            <img src="Picture4.png" alt="Picture4"><br/>
+            I install MySQL and PHP.<br/>
+            <img src="Picture5.png" alt="Picture5"><br/>
+            <img src="Picture6.png" alt="Picture6"><br/>
+            I make a directory to hold my wordpress configuration information.<br/>
+            <img src="Picture7.png" alt="Picture7"><br/>
+            <br/>
+            I create a configuration file for my HTTP. I publish it and reload Apache.<br/>
+            <img src="Picture8.png" alt="Picture8"><br/>
+            <img src="Picture9.png" alt="Picture9"><br/>
+            <br/>
+            I use randomly generated keys for security.<br/>
+            <img src="Picture10.png" alt="Picture10"><br/>
+            <br/>
+            I create a new user with the password from above. I can now edit the 
+            database Wordpress. I generate a key with OpenSSL instead. Now I can 
+            configure the wordpress configuration to allow SSL.<br/>
+            <img src="Picture12.png" alt="Picture12"><br/>
+            <img src="Picture13.png" alt="Picture13"><br/>
+            I add another virtual host to redirect to https. <br/>
+            <img src="Picture14.png" alt="Picture14"><br/>
+            My site still says it's not secure, but that is because 
+            it is a self-signed certificate.<br/>
+            <img src="Picture15.png" alt="Picture15"><br/><br/>
+            FTP<br/><br/>
+            I installed vsftpd to manage file transfers. I used the configuration file to set permissions and edited 
+            the users to include my created ftp group. I also included the directory where my key is located. I 
+            installed FileZilla and transferred an image. <br/>
+            <br/>
+            I install vsftpd.<br/>
+            <img src="Picture16.png" alt="Picture16"><br/>
+            I add my user.<br/>
+            <img src="Picture17.png" alt="Picture17"><br/>
+            I add a password for my user.<br/>
+            <img src="Picture18.png" alt="Picture18"><br/>
+            I restart vsftpd.<br/>
+            <img src="Picture19.png" alt="Picture19"><br/>
+            I allocate certain ports to my FTP server and allow TCP traffic.<br/>
+            <img src="Picture20.png" alt="Picture20"><br/>
+            The connection is successful. <br/>
+            <img src="Picture21.png" alt="Picture21"><br/>
+            I use a certificate to encrypt the FTP traffic.<br/>
+            <img src="Picture22.png" alt="Picture22"><br/>
+            <img src="Picture23.png" alt="Picture23"><br/>
+            The key works. <br/>
+            <img src="Picture24.png" alt="Picture24"><br/>
+            I use FileZilla to transfer a file to my Wordpress.<br/>
+            <img src="Picture25.png" alt="Picture25"><br/><br/>
+            BIND DNS<br/><br/>
+            I use BIND DNS on pfSense GUI to create forward and reverse lookup zones. I first statically assign the 
+            IP addresses for the servers in my demilitarized zone. I then use these addresses to map to domain names 
+            with A records in the forward zone and PTR records in the reverse zone. I use the tool tracert to trace 
+            the route to the web server to confirm that the DNS works properly.<br/><br/>
+            Though I used 3.10-3.100 range, I change this later for the IPs I ended up choosing.<br/>
+            <img src="Picture26.png" alt="Picture26"><br/>
+            <img src="Picture27.png" alt="Picture27"><br/>
+            <img src="Picture28.png" alt="Picture28"><br/>
+            Here I set the static mappings of the IP addresses in my DMZ using their MAC addresses. <br/>
+            <img src="Picture29.png" alt="Picture29"><br/>
+            I install BIND and create my zones and add the views in to ensure BIND creates a configuration file.<br/>
+            <img src="Picture30.png" alt="Picture30"><br/>
+            I create A records for web, mail, and pfsense to resolve to their static mappings. <br/>
+            <img src="Picture31.png" alt="Picture31"><br/>
+            The following configuration is made for the forward zone:<br/>
+            <img src="Picture32.png" alt="Picture32"><br/>
+            I create PTR records to map the IP addresses to the domain name.<br/>
+            <img src="Picture33.png" alt="Picture33"><br/>
+            The following configuration file results:
+            <img src="Picture34.png" alt="Picture34"><br/>
+            I use the traceroute command to ensure the domain connects to the IP:<br/>
+            <img src="Picture35.png" alt="Picture24"><br/><br/>
+            MAIL SERVER<br/><br/>
+            I install postfix and dovecot packages to my CentOS server to give it the ability to communicate with 
+            IMAP and POP3. I change the hostname for my server so I can configure the server in the mail client later. 
+            I create an SSL certificate to add to my postfix configuration file. I also create another user on the server
+            and give them a password to log in to the mail client on the Windows machine. Finally, I install a mail client
+            on my Windows machine to receive emails from the primary mail account on the server. <br/>
+            <br/>
+            I change the hostname.<br/>
+            <img src="Picture36.png" alt="Picture36"><br/>
+            I enable and start the services. <br/>
+            <img src="Picture37.png" alt="Picture37"><br/>
+            I edit the configuration file and uncomment the certificate and key file locations.<br/>
+            <img src="Picture38.png" alt="Picture38"><br/>
+            I add firewall rules on the mail server to allow SMTP. <br/>
+            <img src="Picture39.png" alt="Picture39"><br/>
+            I allow POP3 and IMAP through the firewall. <br/>
+            <img src="Picture40.png" alt="Picture40"><br/>
+            I create a new user and give the user a password.<br/>
+            <img src="Picture41.png" alt="Picture41"><br/>
+            I download Thunderbird on my Windows and log in with the user credentials.
+            I enable SSL and require a password. <br/>
+            <img src="Picture42.png" alt="Picture42"><br/>
+            I send an email from the mail server and receive it on the client end.<br/>
+            <img src="Picture43.png" alt="Picture43"><br/>
+            <img src="Picture44.png" alt="Picture44"><br/><br/>
+            My network is now capable of Internet access, complete with a web server
+            and a mail server. The use of BIND allows for the servers to resolve for clients.
+            File transfer is also possible with FTPS. 
+            </p>
+        
+  
+    </article>
+    <footer>
+        <a href="https://github.com/dependentweakling">GitHub</a><br/>
+        <a href="https://www.linkedin.com/in/hirokomoloney/">LinkedIn</a>
+    </footer>
+</body>
+
+</html>
